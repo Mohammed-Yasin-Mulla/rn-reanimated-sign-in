@@ -4,5 +4,19 @@
 			"path": ".."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"colorize.include": [
+        
+			"**/*.css",
+			"**/*.scss",
+			"**/*.sass",
+			"**/*.less",
+			"**/*.styl",
+			"**/*.ts",
+			"**/*.tsx",
+			"**/*.js",
+			"**/*.jsx"
+		],
+		
+	}
 }
