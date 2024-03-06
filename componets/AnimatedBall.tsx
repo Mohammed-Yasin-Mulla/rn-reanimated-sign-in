@@ -1,8 +1,8 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect } from 'react';
-import { DimensionValue } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
+  Easing,
   cancelAnimation,
   runOnJS,
   useAnimatedStyle,
@@ -11,8 +11,20 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
+import { colors } from '../libs/theme';
 
-const AnimatedBall = ({ r }: { r: DimensionValue }) => {
+type GradientType = 'greenGradient' | 'redGradient' | 'lightGreenGradient';
+const AnimatedBall = ({
+  r,
+  x,
+  y,
+  color,
+}: {
+  r: number;
+  x: number;
+  y: number;
+  color: GradientType;
+}) => {
   const hovering = useSharedValue({
     y: 0,
     x: 0,
@@ -27,7 +39,10 @@ const AnimatedBall = ({ r }: { r: DimensionValue }) => {
           y: 0,
           x: 0,
         },
-        { duration: 1000 }
+        {
+          duration: 1500,
+          easing: Easing.inOut(Easing.quad),
+        }
       ),
       withRepeat(
         withTiming(
@@ -35,7 +50,7 @@ const AnimatedBall = ({ r }: { r: DimensionValue }) => {
             y: 50,
             x: 0,
           },
-          { duration: 1500 }
+          { duration: Math.floor(Math.random() * (2500 - 1500 + 1)) + 1500 }
         ),
         -1,
         true
@@ -56,15 +71,15 @@ const AnimatedBall = ({ r }: { r: DimensionValue }) => {
   const tab = Gesture.Pan()
     .onBegin(() => {
       cancelAnimation(hovering);
-    })
-    .onUpdate(({ translationY, translationX, absoluteX, absoluteY }) => {
       start.value = {
         x: hovering.value.x,
         y: hovering.value.y,
       };
+    })
+    .onUpdate(({ translationY, translationX, absoluteX, absoluteY }) => {
       hovering.value = {
-        y: translationY,
-        x: translationX,
+        y: translationY + start.value.y,
+        x: translationX + start.value.x,
       };
     })
 
@@ -77,13 +92,16 @@ const AnimatedBall = ({ r }: { r: DimensionValue }) => {
       <Animated.View
         style={[
           {
+            position: 'absolute',
             width: r,
             height: r,
+            top: y,
+            left: x,
           },
           animatedStyles,
         ]}>
         <LinearGradient
-          colors={['#92FFC0', '#002661']}
+          colors={colors[color]}
           style={{ width: '100%', height: '100%', borderRadius: 99999 }}
         />
       </Animated.View>
