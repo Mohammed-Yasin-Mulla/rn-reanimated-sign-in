@@ -19,11 +19,13 @@ const AnimatedBall = ({
   x,
   y,
   color,
+  zIndex = 0,
 }: {
   r: number;
   x: number;
   y: number;
   color: GradientType;
+  zIndex?: number;
 }) => {
   const hovering = useSharedValue({
     y: 0,
@@ -76,7 +78,7 @@ const AnimatedBall = ({
         y: hovering.value.y,
       };
     })
-    .onUpdate(({ translationY, translationX, absoluteX, absoluteY }) => {
+    .onUpdate(({ translationY, translationX }) => {
       hovering.value = {
         y: translationY + start.value.y,
         x: translationX + start.value.x,
@@ -97,6 +99,7 @@ const AnimatedBall = ({
             height: r,
             top: y,
             left: x,
+            zIndex,
           },
           animatedStyles,
         ]}>
