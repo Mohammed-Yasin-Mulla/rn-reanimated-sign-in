@@ -48,7 +48,19 @@ function Card() {
   const pan = Gesture.Pan()
     .onUpdate(e => {
       if (e.numberOfPointers === 2) {
-        transform.value = { x: `${e.translationX}deg`, y: `${e.translationY}deg` };
+        let x = e.translationX;
+        let y = e.translationY;
+        if (x > 30) {
+          x = 30;
+        } else if (x < -30) {
+          x = -30;
+        }
+        if (y > 30) {
+          y = 30;
+        } else if (y < -30) {
+          y = -30;
+        }
+        transform.value = withTiming({ x: `${x}deg`, y: `${-y}deg` }, { duration: 0 });
       }
     })
     .onFinalize(() => {
