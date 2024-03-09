@@ -17,6 +17,9 @@
 			"**/*.js",
 			"**/*.jsx"
 		],
+		"cSpell.words": [
+			"Pressable"
+		],
 		
 	}
 }

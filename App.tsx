@@ -1,4 +1,4 @@
-import { StyleSheet, View, AnimatableStringValue } from 'react-native';
+import { StyleSheet, View, AnimatableStringValue, Pressable } from 'react-native';
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
@@ -8,7 +8,14 @@ import { StatusBar } from 'expo-status-bar';
 import { colors } from './libs/theme';
 import AnimatedBall from './componets/AnimatedBall';
 import { LinearGradient } from 'expo-linear-gradient';
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, {
+  FadeInUp,
+  FadeOutDown,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import { useState } from 'react';
 
 export default function App() {
   return (
@@ -98,13 +105,62 @@ function Card() {
             borderRadius: 20,
             overflow: 'hidden',
           }}
-          experimentalBlurMethod="dimezisBlurView"
-        />
+          experimentalBlurMethod="dimezisBlurView">
+          <EnterPhoneForm />
+        </BlurView>
       </Animated.View>
     </GestureDetector>
   );
 }
+const EnterPhoneForm = () => {
+  const [Toggle, setToggle] = useState(false);
 
+  return (
+    <View
+      style={{
+        flex: 1,
+        padding: 24,
+        justifyContent: 'center',
+        gap: 24,
+      }}>
+      <Pressable
+        style={{
+          paddingHorizontal: 8,
+          paddingVertical: 10,
+          backgroundColor: 'blue',
+          borderRadius: 8,
+        }}
+        onPress={() => {
+          setToggle(!Toggle);
+        }}>
+        {Toggle && (
+          <Animated.Text
+            entering={FadeInUp.withInitialValues({
+              translateY: -10,
+            })}
+            exiting={FadeOutDown.withInitialValues({
+              translateY: 10,
+            })}
+            style={{ color: 'white', fontSize: 14, textAlign: 'center' }}>
+            Press me
+          </Animated.Text>
+        )}
+        {!Toggle && (
+          <Animated.Text
+            entering={FadeInUp.withInitialValues({
+              translateY: -10,
+            })}
+            exiting={FadeOutDown.withInitialValues({
+              translateY: 10,
+            })}
+            style={{ color: 'white', fontSize: 14, textAlign: 'center' }}>
+            Press some where
+          </Animated.Text>
+        )}
+      </Pressable>
+    </View>
+  );
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
