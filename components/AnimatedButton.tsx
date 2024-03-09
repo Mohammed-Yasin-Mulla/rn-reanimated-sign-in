@@ -9,7 +9,18 @@ import Animated, {
 } from 'react-native-reanimated';
 import { colors } from '../libs/theme';
 type BackgroundColor = 'blue' | 'red' | 'deepPurple';
-const AnimatedButton = () => {
+const AnimatedButton = ({
+  title,
+  onError,
+  onSuccess,
+  isLoading,
+}: {
+  title: string;
+  isLoading?: boolean;
+  onSuccess?: boolean;
+  onError?: boolean;
+  onPress: () => void;
+}) => {
   const [Toggle, setToggle] = useState(false);
   const backgroundColor = useSharedValue('blue');
 
@@ -47,7 +58,7 @@ const AnimatedButton = () => {
               entering={enteringKeyframe}
               exiting={exitingKeyframe}
               style={{ color: 'white', fontSize: 14, textAlign: 'center' }}>
-              Press me
+              {title}
             </Animated.Text>
           )}
           {!Toggle && (

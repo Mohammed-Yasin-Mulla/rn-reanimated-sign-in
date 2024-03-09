@@ -6,10 +6,10 @@ import { BlurView } from 'expo-blur';
 import { StatusBar } from 'expo-status-bar';
 
 import { colors } from './libs/theme';
-import AnimatedBall from './componets/AnimatedBall';
+import AnimatedBall from './components/AnimatedBall';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
-import AnimatedButton from './componets/AnimatedButton';
+import AnimatedButton from './components/AnimatedButton';
 
 export default function App() {
   return (
@@ -117,7 +117,12 @@ const EnterPhoneForm = () => {
         gap: 24,
         alignItems: 'center',
       }}>
-      <AnimatedButton />
+      <AnimatedButton
+        title="Press button to check the phone number"
+        onPress={function (): void {
+          throw new Error('Function not implemented.');
+        }}
+      />
     </View>
   );
 };
