@@ -1,4 +1,4 @@
-import { StyleSheet, View, AnimatableStringValue, Pressable } from 'react-native';
+import { StyleSheet, View, AnimatableStringValue } from 'react-native';
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
@@ -8,14 +8,8 @@ import { StatusBar } from 'expo-status-bar';
 import { colors } from './libs/theme';
 import AnimatedBall from './componets/AnimatedBall';
 import { LinearGradient } from 'expo-linear-gradient';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-  Keyframe,
-  LinearTransition,
-} from 'react-native-reanimated';
-import { useState } from 'react';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import AnimatedButton from './componets/AnimatedButton';
 
 export default function App() {
   return (
@@ -46,6 +40,7 @@ const AnimatedBallsList = () => {
     </>
   );
 };
+
 function Card() {
   const transform = useSharedValue<{
     x: AnimatableStringValue;
@@ -113,32 +108,6 @@ function Card() {
   );
 }
 const EnterPhoneForm = () => {
-  const [Toggle, setToggle] = useState(false);
-
-  const enteringKeyframe = new Keyframe({
-    0: {
-      transform: [{ translateY: -13 }],
-      opacity: 0,
-    },
-    100: {
-      transform: [{ translateY: 0 }],
-      opacity: 1,
-    },
-  })
-    .duration(300)
-    .delay(400);
-
-  const exitingKeyframe = new Keyframe({
-    0: {
-      transform: [{ translateY: 0 }],
-      opacity: 1,
-    },
-    100: {
-      transform: [{ translateY: 13 }],
-      opacity: 0,
-    },
-  }).duration(100);
-
   return (
     <View
       style={{
@@ -148,36 +117,7 @@ const EnterPhoneForm = () => {
         gap: 24,
         alignItems: 'center',
       }}>
-      <Animated.View
-        layout={LinearTransition.duration(400)}
-        style={{
-          paddingHorizontal: 8,
-          paddingVertical: 10,
-          backgroundColor: 'blue',
-          borderRadius: 8,
-          alignSelf: 'flex-start',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-        }}>
-        <Pressable onPress={() => setToggle(prev => !prev)}>
-          {Toggle && (
-            <Animated.Text
-              entering={enteringKeyframe}
-              exiting={exitingKeyframe}
-              style={{ color: 'white', fontSize: 14, textAlign: 'center' }}>
-              Press me
-            </Animated.Text>
-          )}
-          {!Toggle && (
-            <Animated.Text
-              entering={enteringKeyframe}
-              exiting={exitingKeyframe}
-              style={{ color: 'white', fontSize: 14, textAlign: 'center' }}>
-              Press some where
-            </Animated.Text>
-          )}
-        </Pressable>
-      </Animated.View>
+      <AnimatedButton />
     </View>
   );
 };
