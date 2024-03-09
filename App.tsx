@@ -9,11 +9,11 @@ import { colors } from './libs/theme';
 import AnimatedBall from './componets/AnimatedBall';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, {
-  FadeInUp,
-  FadeOutDown,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
+  Keyframe,
+  LinearTransition,
 } from 'react-native-reanimated';
 import { useState } from 'react';
 
@@ -115,6 +115,30 @@ function Card() {
 const EnterPhoneForm = () => {
   const [Toggle, setToggle] = useState(false);
 
+  const enteringKeyframe = new Keyframe({
+    0: {
+      transform: [{ translateY: -13 }],
+      opacity: 0,
+    },
+    100: {
+      transform: [{ translateY: 0 }],
+      opacity: 1,
+    },
+  })
+    .duration(300)
+    .delay(400);
+
+  const exitingKeyframe = new Keyframe({
+    0: {
+      transform: [{ translateY: 0 }],
+      opacity: 1,
+    },
+    100: {
+      transform: [{ translateY: 13 }],
+      opacity: 0,
+    },
+  }).duration(100);
+
   return (
     <View
       style={{
@@ -122,42 +146,38 @@ const EnterPhoneForm = () => {
         padding: 24,
         justifyContent: 'center',
         gap: 24,
+        alignItems: 'center',
       }}>
-      <Pressable
+      <Animated.View
+        layout={LinearTransition.duration(400)}
         style={{
           paddingHorizontal: 8,
           paddingVertical: 10,
           backgroundColor: 'blue',
           borderRadius: 8,
-        }}
-        onPress={() => {
-          setToggle(!Toggle);
+          alignSelf: 'flex-start',
+          marginLeft: 'auto',
+          marginRight: 'auto',
         }}>
-        {Toggle && (
-          <Animated.Text
-            entering={FadeInUp.withInitialValues({
-              translateY: -10,
-            })}
-            exiting={FadeOutDown.withInitialValues({
-              translateY: 10,
-            })}
-            style={{ color: 'white', fontSize: 14, textAlign: 'center' }}>
-            Press me
-          </Animated.Text>
-        )}
-        {!Toggle && (
-          <Animated.Text
-            entering={FadeInUp.withInitialValues({
-              translateY: -10,
-            })}
-            exiting={FadeOutDown.withInitialValues({
-              translateY: 10,
-            })}
-            style={{ color: 'white', fontSize: 14, textAlign: 'center' }}>
-            Press some where
-          </Animated.Text>
-        )}
-      </Pressable>
+        <Pressable onPress={() => setToggle(prev => !prev)}>
+          {Toggle && (
+            <Animated.Text
+              entering={enteringKeyframe}
+              exiting={exitingKeyframe}
+              style={{ color: 'white', fontSize: 14, textAlign: 'center' }}>
+              Press me
+            </Animated.Text>
+          )}
+          {!Toggle && (
+            <Animated.Text
+              entering={enteringKeyframe}
+              exiting={exitingKeyframe}
+              style={{ color: 'white', fontSize: 14, textAlign: 'center' }}>
+              Press some where
+            </Animated.Text>
+          )}
+        </Pressable>
+      </Animated.View>
     </View>
   );
 };
