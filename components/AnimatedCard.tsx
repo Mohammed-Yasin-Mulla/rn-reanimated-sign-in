@@ -1,6 +1,6 @@
 import { BlurView } from 'expo-blur';
 import { useState } from 'react';
-import { AnimatableStringValue, View } from 'react-native';
+import { AnimatableStringValue, Keyboard, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import AnimatedButton from './AnimatedButton';
@@ -14,10 +14,20 @@ type Inputs = {
 };
 
 function AnimatedCard() {
+  const [showForm, setShowForm] = useState(true);
+
   const transform = useSharedValue<{
     x: AnimatableStringValue;
     y: AnimatableStringValue;
   }>({ x: '0deg', y: '0deg' });
+
+  const flipCard = () => {
+    transform.value = withTiming({ x: '90deg', y: '90deg' }, { duration: 1000 });
+  };
+
+  const flipBackCard = () => {
+    transform.value = withTiming({ x: '0deg', y: '0deg' }, { duration: 1000 });
+  };
 
   const pan = Gesture.Pan()
     .onUpdate(e => {
@@ -49,6 +59,33 @@ function AnimatedCard() {
     ],
   }));
 
+  const onSuccessfulSubmit = () => {
+    Keyboard.dismiss();
+    flipCard();
+    setTimeout(() => {
+      setShowForm(false);
+    }, 1000);
+  };
+
+  if (!showForm) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <AnimatedButton
+          title="Click to reset"
+          onPress={() => {
+            flipBackCard();
+            setShowForm(true);
+          }}
+        />
+      </View>
+    );
+  }
+
   return (
     <GestureDetector gesture={pan}>
       <Animated.View
@@ -73,13 +110,14 @@ function AnimatedCard() {
             overflow: 'hidden',
           }}
           experimentalBlurMethod="dimezisBlurView">
-          <EnterPhoneForm />
+          <EnterPhoneForm onSuccessfulSubmit={onSuccessfulSubmit} />
         </BlurView>
       </Animated.View>
     </GestureDetector>
   );
 }
-const EnterPhoneForm = () => {
+
+const EnterPhoneForm = ({ onSuccessfulSubmit }: { onSuccessfulSubmit: () => void }) => {
   const {
     handleSubmit,
     formState: { errors },
@@ -94,6 +132,9 @@ const EnterPhoneForm = () => {
     setMockState({ isLoading: true, onSuccess: false });
     setTimeout(() => {
       setMockState({ isLoading: false, onSuccess: true });
+      setTimeout(() => {
+        onSuccessfulSubmit();
+      }, 3000);
     }, 3000);
   };
   return (
