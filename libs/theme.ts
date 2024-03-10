@@ -13,6 +13,7 @@ export type Colors = {
   redGradient: string[];
   deepPurpleGradient: string[];
   transparent: string;
+  lightGray: string;
 };
 export const colors: Colors = {
   white: '#ffffff',
@@ -29,4 +30,5 @@ export const colors: Colors = {
   redGradient: ['#F05F57', '#360940'],
   deepPurpleGradient: ['#1E0253', '#C637A0'],
   transparent: 'transparent',
+  lightGray: '#D3D3D3',
 };
