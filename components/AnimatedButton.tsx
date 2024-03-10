@@ -136,7 +136,7 @@ const ErrorIndicator = () => {
           fontSize: 14,
           textAlign: 'center',
         }}>
-        Error occurred
+        Incorrect
       </Animated.Text>
     </>
   );

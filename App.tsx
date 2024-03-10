@@ -1,15 +1,13 @@
-import { StyleSheet, View, AnimatableStringValue } from 'react-native';
-import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
+import { StyleSheet, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { BlurView } from 'expo-blur';
 
 import { StatusBar } from 'expo-status-bar';
 
 import { colors } from './libs/theme';
 import AnimatedBall from './components/AnimatedBall';
 import { LinearGradient } from 'expo-linear-gradient';
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
-import AnimatedButton from './components/AnimatedButton';
+import AnimatedCard from './components/AnimatedCard';
 
 export default function App() {
   return (
@@ -21,7 +19,7 @@ export default function App() {
             colors={colors.deepPurpleGradient}
             style={{ position: 'absolute', width: '100%', height: '100%' }}
           />
-          <Card />
+          <AnimatedCard />
           <AnimatedBallsList />
         </View>
       </GestureHandlerRootView>
@@ -41,91 +39,6 @@ const AnimatedBallsList = () => {
   );
 };
 
-function Card() {
-  const transform = useSharedValue<{
-    x: AnimatableStringValue;
-    y: AnimatableStringValue;
-  }>({ x: '0deg', y: '0deg' });
-
-  const pan = Gesture.Pan()
-    .onUpdate(e => {
-      if (e.numberOfPointers === 2) {
-        let x = e.translationX;
-        let y = e.translationY;
-        if (x > 30) {
-          x = 30;
-        } else if (x < -30) {
-          x = -30;
-        }
-        if (y > 30) {
-          y = 30;
-        } else if (y < -30) {
-          y = -30;
-        }
-        transform.value = withTiming({ x: `${x}deg`, y: `${-y}deg` }, { duration: 0 });
-      }
-    })
-    .onFinalize(() => {
-      transform.value = withTiming({ x: '0deg', y: '0deg' }, { duration: 1000 });
-    });
-
-  const rotateAnimatedValue = useAnimatedStyle(() => ({
-    transform: [
-      { perspective: 1500 },
-      { rotateX: transform.value.y },
-      { rotateY: transform.value.x },
-    ],
-  }));
-
-  return (
-    <GestureDetector gesture={pan}>
-      <Animated.View
-        style={[
-          {
-            width: '80%',
-            height: 500,
-            zIndex: 1,
-            transform: [{ rotateX: '0deg' }, { rotateY: '55deg' }],
-          },
-          rotateAnimatedValue,
-        ]}>
-        <BlurView
-          intensity={40}
-          style={{
-            width: '100%',
-            height: '100%',
-            zIndex: 2,
-            borderWidth: 1,
-            borderColor: 'gray',
-            borderRadius: 20,
-            overflow: 'hidden',
-          }}
-          experimentalBlurMethod="dimezisBlurView">
-          <EnterPhoneForm />
-        </BlurView>
-      </Animated.View>
-    </GestureDetector>
-  );
-}
-const EnterPhoneForm = () => {
-  return (
-    <View
-      style={{
-        flex: 1,
-        padding: 24,
-        justifyContent: 'center',
-        gap: 24,
-        alignItems: 'center',
-      }}>
-      <AnimatedButton
-        title="Press button to check the phone number"
-        onPress={function (): void {
-          throw new Error('Function not implemented.');
-        }}
-      />
-    </View>
-  );
-};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
