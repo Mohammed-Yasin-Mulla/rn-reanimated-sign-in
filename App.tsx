@@ -12,7 +12,7 @@ import AnimatedCard from './components/AnimatedCard';
 export default function App() {
   return (
     <SafeAreaProvider>
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
       <GestureHandlerRootView style={{ flex: 1, position: 'relative' }}>
         <View style={styles.container}>
           <LinearGradient
